@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AccountSys: typeof import('./src/components/AccountSys.vue')['default']
     VanButton: typeof import('vant/es')['Button']
     VanDivider: typeof import('vant/es')['Divider']
     VantButton: typeof import('vant/es')['tButton']
