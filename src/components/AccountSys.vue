@@ -5,6 +5,7 @@
   <p>路径: {{ derivePath }}</p>
   <p>账号地址: {{ address }}</p>
   <p>账号私钥: {{ privateKey }}</p>
+  <!-- <p>keyStore: {{ keyStore }}</p> -->
 </template>
 
 <script setup> 
@@ -22,6 +23,7 @@ console.log('mnemonic', mnemonic)
 const derivePath = ref("m/44'/60'/0'/0/0")
 const address = ref('')
 const privateKey = ref('')
+const keyStore = ref('')
 
 const web3 = new Web3(Web3.givenProvider || "wss://goerli.infura.io/ws/v3/286e8e81bf9346b4abe7766d6fcf1c2f");
 
@@ -42,6 +44,7 @@ const generateMnemonic = async () => {
   // 2. 获取钱包地址
   const lowercaseAddress = wallet.getAddressString()
   console.log('lowercaseAddress', lowercaseAddress)
+  address.value = lowercaseAddress
 
   // 3. 获取钱包的校验地址(校验码是大写)
   const checkAddress = wallet.getChecksumAddressString()
@@ -50,34 +53,38 @@ const generateMnemonic = async () => {
   // 4. 获取私钥(没有 0x)
   const pKey= wallet.getPrivateKey().toString("hex")
   console.log('privateKey', pKey)
+  privateKey.value = pKey
 
   // 导出 keystore
   const password = "111111"
   
   // 1. web3.js
-  const keystore1 = web3.eth.accounts.encrypt(pKey, password)
-  console.log("keystore1", JSON.stringify(keystore1))
+  // const keystore1 = web3.eth.accounts.encrypt(pKey, password)
+  // console.log("keystore1", JSON.stringify(keystore1))
 
   // 2. wallet 对象
   const keystore2 = await wallet.toV3(password)
   console.log("keystore2", JSON.stringify(keystore2))
+  keyStore.value = JSON.stringify(keystore2)
 
   // 通过 keystore 获取私钥
   // 1. web3
-  const res = web3.eth.accounts.decrypt(keystore1, password)
-  console.log("keystore1 privateKey", res.privateKey)
+  // const res = web3.eth.accounts.decrypt(keystore1, password)
+  // console.log("keystore1 privateKey", res.privateKey)
 
   // 2. wallet
   const res2 = await ethwallet.fromV3(keystore2, password)
   const key = res2.getPrivateKey().toString("hex")
   console.log("keystore2 privateKey", key)
 
+
   // 通过私钥获取地址
   const priKey = Buffer(pKey, "hex")
   console.log('privateKey Buffer', priKey)
 
   const wallet3 = ethwallet.fromPrivateKey(priKey)
-  const lowercaseAddress2 = wallet.getAddressString()
+  const lowercaseAddress2 = wallet3.getAddressString()
+  // 和前面获取的 lowercaseAddress 是相同的
   console.log('lowercaseAddress2', lowercaseAddress2)
 }
 

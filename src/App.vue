@@ -1,16 +1,17 @@
 <template>
-  <Web3Api></Web3Api>
   <AccountSys></AccountSys>
+  <!-- <WalletButton></WalletButton> -->
 </template>
 
 <script setup> 
 import Web3Api from './components/Web3Api.vue';
-import AAccountSys from './components/AccountSys.vue';
+import AccountSys from './components/AccountSys.vue';
+import WalletButton from './components/WalletButton.vue';
 
 </script>
 
 <style lang="less">
 body {
-  padding: 0 20px;
+  padding: 20px;
 }
 </style>
